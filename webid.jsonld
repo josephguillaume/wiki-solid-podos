@@ -1,0 +1,11 @@
+{
+  "@context":"https://www.w3.org/ns/solid/oidc-context.jsonld",
+  "client_id": "https://josephguillaume.github.io/wiki-solid-podos/webid.jsonld#this",
+  "client_name": "Wiki Solid PodOS",
+  "redirect_uris": ["https://josephguillaume.github.io/wiki-solid-podos/"],
+  "scope": "openid webid offline_access",
+  "grant_types": ["refresh_token", "authorization_code"],
+  "response_types": ["code"],
+  "default_max_age": 3600,
+  "require_auth_time": true
+}

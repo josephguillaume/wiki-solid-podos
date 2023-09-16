@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Wiki</title>
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <script src="https://unpkg.com/@pod-os/core@0.9.0/lib/index.js"></script>
+    <script src="setupPodOS.js"></script>
+    <script type="module">
+      import { s as session } from "https://unpkg.com/@pod-os/elements@0.13.0/dist/elements/p-03fac5e7.js";
+      window.session = session;
+      setupPodOS(
+        "https://josephguillaume.github.io/wiki-solid-podos/",
+        "https://josephguillaume.github.io/wiki-solid-podos/webid.jsonld#this"
+      );
+    </script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/eruda"
+      onload="eruda.init()"
+    ></script>
+    <script
+      type="module"
+      src="https://unpkg.com/@pod-os/elements/dist/elements/elements.esm.js"
+    ></script>
+    <link
+      href="https://unpkg.com/@pod-os/elements/dist/elements/elements.css"
+      rel="stylesheet"
+    />
+    <script src="
+	    https://cdn.jsdelivr.net/npm/markdown-it@13.0.1/dist/markdown-it.min.js
+	    "></script>
+    <script src="
+	    https://cdn.jsdelivr.net/npm/markdown-it-footnote@3.0.3/dist/markdown-it-footnote.min.js
+	    "></script>
+    <script src="
+	    https://cdn.jsdelivr.net/npm/markdown-it-attrs@4.1.6/markdown-it-attrs.browser.min.js
+	    "></script>
+    <script src="routeUri.js"></script>
+    <script src="MyRouter.js"></script>
+    <script src="TextLoader.js"></script>
+    <script src="WikiMarkdownEditor.js"></script>
+    <script src="MarkdownRender.js"></script>
+    <script src="MarkdownRenderFileAware.js"></script>
+    <script src="replaceGithubWikiLinks.js"></script>
+    <script src="ReceiveResourceOS.js"></script>
+    <script src="Fallback.js"></script>
+    <script>
+      window.customElements.define("text-loader", TextLoader);
+      window.customElements.define("markdown-render", MarkdownRenderFileAware);
+      window.customElements.define("markdown-editor", WikiMarkdownEditor);
+      window.customElements.define("my-fallback", Fallback);
+      routeUri(
+        uri => {
+          document.querySelector("#loader").uri = uri;
+          document.querySelector("#loader2").uri = uri;
+          if (document.querySelector("pos-resource")) {
+            document.querySelector("pos-resource").uri = uri;
+          } else {
+            document
+              .querySelector("my-fallback template")
+              .content.querySelector("pos-resource").uri = uri;
+          }
+          document.querySelector("pos-navigation-bar").uri = uri;
+          document.title =
+            "Wiki - " +
+            decodeURI(uri)
+              .replace("https://", "")
+              .replace(".md", "");
+        },
+        () => document.querySelector("pos-navigation-bar").uri
+      );
+    </script>
+  </head>
+  <body>
+    <!--    <pos-app> -->
+    <pos-error-toast>
+      <ion-app>
+        <!-- PodOS elements are build on Ionic -->
+        <ion-header>
+          <ion-toolbar>
+            <ion-title slot="start"
+              ><a
+                onClick="return go(this)"
+                href="https://josephguillaume.github.io/wiki-solid-podos/README.md"
+                >Wiki</a
+              ></ion-title
+            >
+            <pos-login></pos-login>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content>
+          <pos-navigation-bar
+            uri="https://josephguillaume.github.io/wiki-solid-podos/README.md"
+          ></pos-navigation-bar>
+          <text-loader id="loader" active="tbc">
+            <markdown-editor slot="editor"></markdown-editor>
+            <markdown-render slot="render"></markdown-render>
+          </text-loader>
+          <text-loader id="loader2" active="tbc" ext=".html">
+            <ion-textarea slot="editor"></ion-textarea>
+            <ion-textarea
+              slot="render"
+              placeholder="Type something here"
+              fill="outline"
+              auto-grow="true"
+              wrap="soft"
+              debounce="50"
+              style="margin:15px;width:90%"
+            ></ion-textarea>
+          </text-loader>
+          <my-fallback active="tbc">
+            <template>
+              <pos-resource>
+                <pos-type-router> </pos-type-router>
+              </pos-resource>
+            </template>
+          </my-fallback>
+        </ion-content>
+      </ion-app>
+    </pos-error-toast>
+    <!--    </pos-app>-->
+  </body>
+</html>
